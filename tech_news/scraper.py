@@ -31,13 +31,24 @@ def scrape_updates(html_content):
 def scrape_next_page_link(html_content):
     selector = Selector(text=html_content)
     next = selector.css("span.current ~ a::attr(href)").get()
-    print(next)
     return next
 
 
 # Requisito 4
 def scrape_news(html_content):
-    """Seu código deve vir aqui"""
+    news = {}
+    selector = Selector(text=html_content)
+    news["url"] = selector.css("link[rel=canonical]::attr(href)").get()
+    news["title"] = selector.css(".entry-title::text").get().strip()
+    news["timestamp"] = selector.css(".meta-date::text").get()
+    news["writer"] = selector.css(".author a::text").get()
+    news["comments_count"] = len(selector.css(".comment-body").getall())
+    news["summary"] = "".join(
+        selector.css(".entry-content > p:first-of-type *::text").getall()
+    ).strip()
+    news["tags"] = selector.css("a[rel=tag]::text").getall()
+    news["category"] = selector.css(".meta-category .label::text").get()
+    return news
 
 
 # Requisito 5
