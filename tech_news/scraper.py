@@ -11,7 +11,6 @@ def fetch(url):
             url, headers={"user-agent": "Fake user-agent"}, timeout=3
         )
         time.sleep(1)
-        print(response.status_code)
         if not response.status_code == 200:
             return None
         return response.text
@@ -30,7 +29,10 @@ def scrape_updates(html_content):
 
 
 def scrape_next_page_link(html_content):
-    """Seu código deve vir aqui"""
+    selector = Selector(text=html_content)
+    next = selector.css("span.current ~ a::attr(href)").get()
+    print(next)
+    return next
 
 
 # Requisito 4
