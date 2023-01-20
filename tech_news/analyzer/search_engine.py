@@ -4,12 +4,8 @@ from tech_news.database import search_news
 
 
 def search_by_title(title):
-    title_and_url = []
-    QUERY = {"title": {"$regex": f"{title}/i"}}
-    news = search_news(QUERY)
-    for new in news:
-        title_and_url.append((new["title"], new["url"]))
-    return title_and_url
+    news = search_news({"title": {"$regex": title, "$options": "i"}})
+    return [(new["title"], new["url"]) for new in news]
 
 
 # Requisito 7
